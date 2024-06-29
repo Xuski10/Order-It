@@ -1,0 +1,85 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Visual Studio Code
+.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+/build/
+.flutter/
+.flutter-plugins
+.flutter-plugins-dependencies
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Android specific
+**/android/**/local.properties
+**/android/**/GeneratedPluginRegistrant.java
+**/android/**/gradle/
+**/android/captures/
+**/android/.gradle/
+**/android/.idea/
+
+# iOS specific
+**/ios/**/Flutter/App.framework
+**/ios/**/Flutter/Flutter.framework
+**/ios/Flutter/App.framework
+**/ios/Flutter/Flutter.framework
+**/ios/Runner/GeneratedPluginRegistrant.*
+**/ios/Pods/
+**/ios/.symlinks/
+
+# Windows specific
+**/windows/flutter/ephemeral/
+**/windows/CMakeLists.txt
+**/windows/flutter/GeneratedPluginRegistrant.*
+**/windows/Flutter/ephemeral/
+
+# MacOS specific
+**/macos/Flutter/ephemeral/
+**/macos/Flutter/GeneratedPluginRegistrant.*
+**/macos/.symlinks/
+**/macos/Flutter/ephemeral/
+
+# Linux specific
+**/linux/flutter/ephemeral/
+**/linux/flutter/GeneratedPluginRegistrant.*
+
+# Web specific
+lib/generated_plugin_registrant.dart
+
+# Firebase specific
+ios/Runner/GoogleService-Info.plist
+android/app/google-services.json
