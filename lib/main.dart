@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:order_it_2/auth/login_or_register.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 void main() async{
@@ -17,7 +18,7 @@ class MainApp extends StatelessWidget {
     return const MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Text('Hello Xuski!'),
+          child: LoginOrRegister(),
         ),
       ),
     );
