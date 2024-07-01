@@ -30,12 +30,14 @@ class MyButton extends StatelessWidget {
           gradient: linearGradient,
           borderRadius: BorderRadius.circular(100)
         ),
-        child: Text(
-          text,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            
-            fontSize: 16
+        child: Center(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Theme.of(context).colorScheme.secondary,
+              fontSize: 16
+            ),
           ),
         ),
       ),

@@ -7,8 +7,10 @@ environment:
   sdk: ">=3.4.3 <4.0.0"
 
 dependencies:
+  animate_do: ^3.3.4
   flutter:
     sdk: flutter
+  provider: ^6.1.2
   supabase: ^2.2.2
   supabase_flutter: ^2.5.6
 

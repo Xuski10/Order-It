@@ -53,6 +53,7 @@ class _MyTextfieldState extends State<MyTextfield> {
                 hintStyle: const TextStyle(color: Colors.grey),
                 labelText: widget.labelText,
                 labelStyle: const TextStyle(color: Colors.grey),
+                /*prefixIcon: widget.icon != null ? Icon(widget.icon, color: Colors.lightGreen) : null*/
               ),
               onTap: () {
                 setState(() {

@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:order_it_2/components/my_button.dart';
 import 'package:order_it_2/components/my_textfield.dart';
@@ -6,7 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginPage extends StatefulWidget {
 
-  final void Function()? onTap;
+  final void Function() onTap;
 
   const LoginPage({super.key, required this.onTap});
 
@@ -25,34 +26,97 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Logo
-          Image.asset(
-            'assets/icons/Logo.png',
-            width: 500,
-            height: 300,
-          ),
-          // Email
-          MyTextfield(
-            controller: emailController, 
-            hintText: "Email",
-            labelText: "Email",
-            obscureText: false
-          ),
-          // Password
-          MyTextfield(
-            controller: passwordController,
-            hintText: "Password",
-            labelText: "Password",
-            obscureText: true
-          ),
-          // Inicio de sesión
-          MyButton(text: "Iniciar Sesión")
-        ],
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      body: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(
+              height: 40,
+            ),
+            // Logo
+            FadeInDown(
+              duration: const Duration(seconds: 3),
+              child: Image.asset(
+                'assets/icons/Logo.png',
+                width: 600,
+                height: 300,
+              ),
+            ),
+            
+            // Email
+            FadeInRight(
+              duration: const Duration(seconds: 2),
+              child: MyTextfield(
+                controller: emailController, 
+                hintText: "Email",
+                labelText: "Email",
+                obscureText: false
+              ),
+            ),
+
+            const SizedBox(
+              height: 15,
+            ),
+
+            // Password
+            FadeInLeft(
+              duration: const Duration(seconds: 2),
+              child: MyTextfield(
+                controller: passwordController,
+                hintText: "Contraseña",
+                labelText: "Contraseña",
+                obscureText: true
+              ),
+            ),
+
+            const SizedBox(
+              height: 30,
+            ),
+
+            // Inicio de sesión
+            FadeInUp(
+              duration: const Duration(seconds: 2),
+              child: MyButton(
+                text: "Iniciar Sesión",
+                linearGradient: LinearGradient(
+                  colors: [Colors.green.shade700, Colors.green.shade400]
+                ),
+                onTap: () {
+                 // todo 
+                },
+              ),
+            ),
+
+            const SizedBox(
+              height: 30,
+            ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  '¿No eres miembro?',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inversePrimary
+                  ),
+                ),
+                const SizedBox(width: 3),
+                GestureDetector(
+                  onTap: widget.onTap,
+                  child: const Text(
+                    "Regístrate",
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                )
+              ],
+            )
+          ],
+        ),
       ),
     );
   }
