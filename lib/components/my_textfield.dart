@@ -30,27 +30,44 @@ class _MyTextfieldState extends State<MyTextfield> {
     
     final size = MediaQuery.of(context).size;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        TextField(
-          controller: widget.controller,
-          obscureText: widget.obscureText,
-          decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.indigo.withOpacity(0.3))
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: Color.fromARGB(255, 135, 181, 136)),
-              borderRadius: BorderRadius.circular(18)
-            ),
-            disabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: Color.fromARGB(255, 51, 132, 53)),
-              borderRadius: BorderRadius.circular(18)
+    return SizedBox(
+      width: size.width * 0.9,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 25),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            TextField(
+              controller: widget.controller,
+              obscureText: widget.obscureText,
+              decoration: InputDecoration(
+                enabledBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Color.fromARGB(255, 135, 181, 136)),
+                  borderRadius: BorderRadius.circular(18)
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Color.fromARGB(255, 51, 132, 53)),
+                  borderRadius: BorderRadius.circular(18)
+                ),
+                hintText: _showHint ? widget.hintText : null,
+                hintStyle: const TextStyle(color: Colors.grey),
+                labelText: widget.labelText,
+                labelStyle: const TextStyle(color: Colors.grey),
+              ),
+              onTap: () {
+                setState(() {
+                  _showHint = false;
+                });
+              },
+              /*onChanged: (value) {
+                setState(() {
+                  _showHint = value.isEmpty;
+                });
+              },*/
             )
-          ),
-        )
-      ],
+          ],
+        ),
+      ),
     );
   }
 }
