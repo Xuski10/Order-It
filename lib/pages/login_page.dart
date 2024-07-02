@@ -93,27 +93,30 @@ class _LoginPageState extends State<LoginPage> {
               height: 30,
             ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '¿No eres miembro?',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.inversePrimary
-                  ),
-                ),
-                const SizedBox(width: 3),
-                GestureDetector(
-                  onTap: widget.onTap,
-                  child: const Text(
-                    "Regístrate",
+            FadeInUp(
+              duration: const Duration(seconds: 2),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '¿No eres miembro?',
                     style: TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.bold
+                      color: Theme.of(context).colorScheme.inversePrimary
                     ),
                   ),
-                )
-              ],
+                  const SizedBox(width: 3),
+                  GestureDetector(
+                    onTap: widget.onTap,
+                    child: const Text(
+                      "Regístrate",
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold
+                      ),
+                    ),
+                  )
+                ],
+              ),
             )
           ],
         ),

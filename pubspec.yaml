@@ -10,6 +10,7 @@ dependencies:
   animate_do: ^3.3.4
   flutter:
     sdk: flutter
+  http: ^1.2.1
   provider: ^6.1.2
   supabase: ^2.2.2
   supabase_flutter: ^2.5.6
