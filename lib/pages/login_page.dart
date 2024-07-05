@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:order_it_2/components/my_button.dart';
 import 'package:order_it_2/components/my_textfield.dart';
 import 'package:order_it_2/controllers/auth/login_controller.dart';
@@ -83,8 +84,21 @@ class _LoginPageState extends State<LoginPage> {
                 linearGradient: LinearGradient(
                   colors: [Colors.green.shade700, Colors.green.shade400]
                 ),
-                onTap: () {
-                 // todo 
+                onTap: () async {
+                  // Esconder el teclado
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  
+                  bool hasConnection = await InternetConnectionChecker().hasConnection;
+
+                  if (hasConnection) {
+                    if (context.mounted) {
+                      loginController.login(
+                        context,
+                        emailController.text,
+                        passwordController.text
+                      );
+                    }
+                  }
                 },
               ),
             ),
@@ -93,6 +107,7 @@ class _LoginPageState extends State<LoginPage> {
               height: 30,
             ),
 
+            // Ir a Registro
             FadeInUp(
               duration: const Duration(seconds: 2),
               child: Row(

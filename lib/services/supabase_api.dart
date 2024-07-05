@@ -69,15 +69,29 @@ class SupabaseApi {
       'password': password
     });
 
-    http.Response response = await http.post(
-      Uri.parse(url),
-      headers: headers,
-      body: body
-    );
+    print("Body: $body");
 
-    if(response.statusCode == 200){
-      return true;
-    } else {
+    try{
+      http.Response response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: body
+      );
+
+      String peticion = response.body;
+      
+      print("Response: $peticion");
+
+      if(response.statusCode == 200){
+        return true;
+      } else {
+        if(response.statusCode == 500){
+          print('Error del servidor: ${response.body}');
+        }
+        return false;
+      }
+    } catch (e) {
+      print('Excepción al registrar usuario: $e');
       return false;
     }
   }
