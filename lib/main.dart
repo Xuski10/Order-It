@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:order_it_2/auth/login_or_register.dart';
+import 'package:order_it_2/pages/first_page.dart';
 import 'package:order_it_2/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -25,7 +26,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: const LoginOrRegister(),
+      home: const FirstPage(),
       theme: Provider.of<ThemeProvider>(context).themeData,
     );
   }
