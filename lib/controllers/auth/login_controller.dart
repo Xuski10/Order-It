@@ -35,8 +35,9 @@ class LoginController {
             MaterialPageRoute(builder: (context) => const FirstPage())
           );
         }
+      } else {
+        SnackbarHelper.showSnackbar(context, 'Usuario o contraseña incorrectos', backgroundColor: Colors.red);
       }
-      SnackbarHelper.showSnackbar(context, 'Usuario o contraseña incorrectos', backgroundColor: Colors.red);
     }
   }
 }

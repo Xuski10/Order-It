@@ -96,7 +96,6 @@ class SupabaseApi {
     }
   }
 
-
   Future<int?> getUserRole(String email) async {
     
     final url = '$baseUrl/rest/v1/users?select=rol&email=eq.${Uri.encodeComponent(email)}';
@@ -134,6 +133,80 @@ class SupabaseApi {
         print('Error al obtener el UUID del usuario: ${response.statusCode}');
       }
       return null;
+    }
+  }
+
+  Future<bool> getIsOccupied(int tableNumber) async {
+    final url = '$baseUrl/rest/v1/tables?table_number=eq.$tableNumber';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+    
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+
+      if (jsonResponse.isNotEmpty && 
+          jsonResponse[0]['is_occupied'] != null && 
+          jsonResponse[0]['is_occupied']) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if(kDebugMode){
+        print('Error al obtener el UUID del usuario: ${response.statusCode}');
+      }
+      return false;
+    }
+  }
+
+  Future<void> assignTable(String userId, int tableNumber) async {
+    final url = '$baseUrl/rest/v1/tables?id=eq.$tableNumber';
+    final headers = _createHeaders();
+
+    final body = jsonEncode({
+      'user_id' : userId,
+      'table_number' : tableNumber,
+      'is_occupied' : true
+    });
+
+    final response = await http.patch(Uri.parse(url), headers: headers, body: body);
+
+    if (response.statusCode == 204) {
+      if (kDebugMode) {
+        print('Mesa $tableNumber asignada satisfactoriamente');
+      }
+    } else {
+      if (kDebugMode) {
+        print('Hubo un error al asignar la mesa $tableNumber: ${response.statusCode} ${response.body}');
+      }
+    }
+  }
+
+  Future<bool> releaseTable(String userId, int tableNumber) async {
+    final url = '$baseUrl/rest/v1/tables?table_number=eq.$tableNumber';
+    final headers = _createHeaders();
+
+    final body = jsonEncode({
+      'user_id' : null,
+      'table_number' : tableNumber,
+      'is_occupied' : false
+    });
+
+    final response = await http.patch(Uri.parse(url), headers: headers, body: body);
+
+    if (response.statusCode == 204) {
+      if (kDebugMode) {
+        print('Mesa $tableNumber libre.');
+      }
+      return true;
+    } else {
+      if (kDebugMode) {
+        print(
+          'Hubo un error al desasignar la mesa $tableNumber: ${response.statusCode} ${response.body}',
+        );
+      }
+      return false;
     }
   }
 }

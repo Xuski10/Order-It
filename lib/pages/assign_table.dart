@@ -68,9 +68,11 @@ class _AssignTableState extends State<AssignTable> {
     int tableNumber = int.tryParse(tableNumberQuery.replaceAll("eq.", "")) ?? 0;
 
     if (tableNumber == 0) {
-      _showDialog('Error', 'No se ha encontrado el número de la mesa en el QR Code URL', () {});
+      //_showDialog('Error', 'No se ha encontrado el número de la mesa en el QR Code URL', () {});
       return;
     }
+
+
   }
 
   @override
