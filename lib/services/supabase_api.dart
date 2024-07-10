@@ -49,11 +49,7 @@ class SupabaseApi {
 
     if (response.statusCode != 200) {
       if (context.mounted) {
-        SnackbarHelper.showSnackbar(
-          context,
-          "Inicio de sesión incorrecto",
-          backgroundColor: Colors.red
-        );
+        SnackbarHelper.showSnackbar(context, 'Usuario o contraseña incorrectos', backgroundColor: Colors.red);
       }
     }
 
@@ -136,29 +132,6 @@ class SupabaseApi {
     }
   }
 
-  Future<bool> getIsOccupied(int tableNumber) async {
-    final url = '$baseUrl/rest/v1/tables?table_number=eq.$tableNumber';
-    final headers = _createHeaders();
-
-    final response = await http.get(Uri.parse(url), headers: headers);
-    
-    if (response.statusCode == 200) {
-      final List<dynamic> jsonResponse = json.decode(response.body);
-
-      if (jsonResponse.isNotEmpty && 
-          jsonResponse[0]['is_occupied'] != null && 
-          jsonResponse[0]['is_occupied']) {
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      if(kDebugMode){
-        print('Error al obtener el UUID del usuario: ${response.statusCode}');
-      }
-      return false;
-    }
-  }
 
   Future<void> assignTable(String userId, int tableNumber) async {
     final url = '$baseUrl/rest/v1/tables?id=eq.$tableNumber';
@@ -206,6 +179,49 @@ class SupabaseApi {
           'Hubo un error al desasignar la mesa $tableNumber: ${response.statusCode} ${response.body}',
         );
       }
+      return false;
+    }
+  }
+
+  Future<bool> getIsOccupied(int tableNumber) async {
+    final url = '$baseUrl/rest/v1/tables?table_number=eq.$tableNumber';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+    
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+
+      if (jsonResponse.isNotEmpty && 
+          jsonResponse[0]['is_occupied'] != null && 
+          jsonResponse[0]['is_occupied']) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if(kDebugMode){
+        print('Error al obtener el UUID del usuario: ${response.statusCode}');
+      }
+      return false;
+    }
+  }
+
+  Future<bool> getReservations(String userId) async {
+    final url = '$baseUrl/rest/v1/tables?select*&user_id=eq.$userId';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+
+      if (jsonResponse.isNotEmpty) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
       return false;
     }
   }

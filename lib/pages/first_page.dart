@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:lottie/lottie.dart';
+import 'package:order_it_2/components/my_drawer.dart';
 import 'package:order_it_2/controllers/auth/login_controller.dart';
 import 'package:order_it_2/pages/assign_table.dart';
 import 'package:order_it_2/pages/home_page.dart';
@@ -12,7 +13,7 @@ class FirstPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondary,
-      //todo: drawer
+      drawer: const MyDrawer(ordersAllowed: false),
       appBar: AppBar(
         centerTitle: true,
         elevation: 0,
@@ -21,7 +22,7 @@ class FirstPage extends StatelessWidget {
           builder: (BuildContext context) {
             return IconButton(
               onPressed: () {
-                //todo: open drawer
+                Scaffold.of(context).openDrawer();
               },
               icon: const Icon(Icons.menu)
             );
@@ -53,7 +54,7 @@ class FirstPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const HomePage(),
+                      builder: (context) => const HomePage(ordersAllowed: false),
                     )
                   );
                 },

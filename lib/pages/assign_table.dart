@@ -1,7 +1,10 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:order_it_2/pages/home_page.dart';
 import 'package:order_it_2/services/supabase_api.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:http/http.dart' as http;
 
 class AssignTable extends StatefulWidget {
 
@@ -72,11 +75,102 @@ class _AssignTableState extends State<AssignTable> {
       return;
     }
 
+    isOccupied = await supabaseApi.getIsOccupied(tableNumber);
 
+    bool doubleReservation = await supabaseApi.getReservations(widget.userId);
+
+    if (doubleReservation) {
+      _showDialog('Error', 'Ya tienes una mesa reservada. No puedes reservar otra.', () {});
+      return;
+    }
+
+    // URL para la petición PATCH
+    final url = '$baseUrl/rest/v1/tables?table_number=eq.$tableNumber';
+
+    final headers = {
+      'apikey' : apikey,
+      'Authorization' : authorization,
+      'Content-Type' : 'application/json'
+    };
+
+    final body = jsonEncode({
+      'is_occupied' : true,
+      'user_id' : widget.userId
+    });
+
+    if (!doubleReservation) {
+      final response = await http.patch(Uri.parse(url), headers: headers, body: body);
+
+      if (response.statusCode == 204) {
+        if (isOccupied) {
+          _showDialog('Error', 'La mesa $tableNumber está ocupada, escoja otra por favor.', (){});
+        } else {
+          _showDialog('Mesa asignada', 'La mesa $tableNumber ha sido reservada con éxito.', (){
+            controller?.stopCamera();
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const HomePage(ordersAllowed: true),
+              )
+            );
+          });
+        }
+      } else {
+        _showDialog('Error', 'Error al asignar la mesa $tableNumber.', (){});
+      }
+    }
+  }
+
+  void _showDialog(String title, String content, VoidCallback onOkPressed) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                setState(() {
+                  result = null; // Resetea el resultado para poder escanear otro QR
+                });
+                controller?.resumeCamera(); // Reactiva la cámara para volver a escanear
+                onOkPressed(); // Ejecuta la acción del showDialog de forma dinámica (errores/éxito)
+              },
+              child: const Text('Ok')
+            )
+          ],
+        );
+      }
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.green,
+        title: const Text('Escanea el QR de tu mesa', style: TextStyle( color: Colors.white, fontWeight: FontWeight.bold)),
+      ),
+      body: Stack(
+        children: [
+          QRView(
+            key: qrKey,
+            onQRViewCreated: _onQRViewCreated
+          ),
+          Center(
+            child: Container(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                border: Border.all( color: Colors.white, width: 2 ),
+                borderRadius: BorderRadius.circular(12)
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

@@ -94,7 +94,7 @@ class _LoginPageState extends State<LoginPage> {
                     if (context.mounted) {
                       loginController.login(
                         context,
-                        emailController.text,
+                        emailController.text.toLowerCase(),
                         passwordController.text
                       );
                     }
