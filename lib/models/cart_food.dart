@@ -2,7 +2,7 @@ import 'package:order_it_2/models/addon.dart';
 import 'package:order_it_2/models/food.dart';
 
 class CartFood {
-  String id; // Si hay un ID específico para el ítem del carrito
+  String id;
   Food food;
   List<Addon> addons;
   int quantity;
@@ -16,8 +16,8 @@ class CartFood {
 
   factory CartFood.fromJson(Map<String, dynamic> json) {
     return CartFood(
-      id: json['id'].toString(), // Ajusta según corresponda
-      food: Food.fromJson(json['food']), // Ajusta según corresponda
+      id: json['id'].toString(),
+      food: Food.fromJson(json['food']),
       addons: (json['addons'] as List<dynamic>)
           .map((addonJson) => Addon.fromJson(addonJson))
           .toList(),
