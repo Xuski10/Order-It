@@ -225,4 +225,18 @@ class SupabaseApi {
       return false;
     }
   }
+
+  Future <List<Map<String, dynamic>>> getFood() async {
+    final url = '$baseUrl/rest/v1/food?select=*';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Error al cargar los platos');
+    }
+  }
 }

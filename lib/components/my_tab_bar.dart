@@ -28,5 +28,6 @@ class MyTabBar extends StatelessWidget implements PreferredSizeWidget{
   }
   
   @override
+  // Devuelve el tamaño preferido del widget, que es la altura estándar de la barra de herramientas (kToolbarHeight)
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }
