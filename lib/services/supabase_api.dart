@@ -1,6 +1,8 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:order_it_2/services/snackbar_helper.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -237,6 +239,104 @@ class SupabaseApi {
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
       throw Exception('Error al cargar los platos');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getFoodAddons() async {
+    final url = '$baseUrl/rest/v1/food_addon?select=*';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Error al cargar los complementos');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getAddons() async {
+    final url = '$baseUrl/rest/v1/addon?select=*';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.cast<Map<String,dynamic>>();
+    } else {
+      throw Exception('Error al cargar los complementos');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getCategories() async {
+    final url = '$baseUrl/rest/v1/category?select=*';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Error al cargar las categorías');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getOrders([String? userId]) async {
+    final supabase = Supabase.instance.client;
+    final user = await supabase.auth.getUser();
+
+    userId = userId ?? user.user?.id;
+
+    final url = '$baseUrl/rest/v1/cart?select*&is_finished=eq.true&user_id=eq.$userId';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Error al cargar el carrito del cliente: $e');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getUser([String? email]) async {
+    final supabase = Supabase.instance.client;
+    final user = await supabase.auth.getUser();
+
+    final url = '$baseUrl/rest/v1/users?email=eq.${Uri.encodeComponent(user.user!.email!)}';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode != 200) {
+      throw Exception('Error al traer el usuario');
+    }
+
+    final List<dynamic> jsonResponse = json.decode(response.body);
+
+    if (kDebugMode) {
+      print(jsonResponse);
+    }
+
+    return jsonResponse.cast<Map<String, dynamic>>();
+  }
+
+  // REVISAR
+  Future<List<Map<String, dynamic>>> getCartItems2(String cartId) async {
+    final url = '$baseUrl/rest/v1/cart_item?select=*&cart_id=eq.$cartId';
+    final headers = _createHeaders();
+
+    final response = await http.get(Uri.parse(url), headers: headers);
+
+    if (response.statusCode == 200) {
+      final List<dynamic> jsonResponse = json.decode(response.body);
+      return jsonResponse.cast<Map<String, dynamic>>();
+    } else {
+      throw Exception('Error al cargar food_addons');
     }
   }
 }

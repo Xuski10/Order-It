@@ -7,6 +7,8 @@ class Food {
   final String imagePath;
   final double price;
   final String categoryId;
+  final List<String> addonIds;
+  List<Addon>? addons;
 
   Food({
     required this.id,
@@ -14,7 +16,9 @@ class Food {
     required this.description,
     required this.imagePath,
     required this.price,
-    required this.categoryId
+    required this.categoryId,
+    required this.addonIds,
+    this.addons,
   });
 
   factory Food.fromJson(Map<String, dynamic> json) {
@@ -22,20 +26,30 @@ class Food {
       id: json['id'].toString(),
       name: json['name'],
       description: json['description'],
-      imagePath: json['imagePath'],
+      imagePath: json['imagepath'],
       price: json['price'].toDouble(),
-      categoryId: json['categoryId'].toString()
+      categoryId: json['category_id'].toString(),
+      addonIds: json.containsKey('addon_ids')
+          ? List<String>.from(
+              json['addon_ids'].map((addonId) => addonId.toString()))
+          : [],
+      addons: json['addons'] != null
+          ? List<Addon>.from(
+              json['addons'].map((addon) => Addon.fromJson(addon)))
+          : null,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id' : int.parse(id),
-      'name' : name,
-      'description' : description,
-      'imagepath' : imagePath,
-      'price' : price,
-      'category_id' : int.parse(categoryId)
+      'id': int.parse(id),
+      'name': name,
+      'description': description,
+      'imagepath': imagePath,
+      'price': price,
+      'category_id': int.parse(categoryId),
+      'addon_ids': addonIds.map(int.parse).toList(),
+      'addons': addons?.map((addon) => addon.toJson()).toList(),
     };
   }
 }

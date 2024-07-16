@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:order_it_2/auth/login_or_register.dart';
+import 'package:order_it_2/models/restaurant.dart';
 import 'package:order_it_2/pages/first_page.dart';
 import 'package:order_it_2/themes/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +14,12 @@ void main() async{
   runApp(MultiProvider(
     providers: [
       // Provider del tema
-      ChangeNotifierProvider(create: (context) => ThemeProvider())
+      ChangeNotifierProvider(
+        create: (context) => ThemeProvider()
+      ),
+      ChangeNotifierProvider(
+        create: (context) => Restaurant(),
+      )
     ],
     child: const MainApp(),
   ));
