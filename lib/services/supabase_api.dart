@@ -4,10 +4,14 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:order_it_2/models/addon.dart';
 import 'package:order_it_2/services/snackbar_helper.dart';
+import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseApi {
+
+  final supabase = Supabase.instance.client;
 
   // Singleton
   static final SupabaseApi _instance = SupabaseApi._internal();
@@ -228,19 +232,37 @@ class SupabaseApi {
     }
   }
 
-  Future <List<Map<String, dynamic>>> getFood() async {
-    final url = '$baseUrl/rest/v1/food?select=*';
+  /// Obtiene la información de los platos desde la API REST.
+///
+/// Parámetros:
+/// - [foodId]: (Opcional) El ID del plato. Si se proporciona, se obtiene un plato específico;
+///   de lo contrario, se obtienen todos los platos.
+///
+/// Retorna:
+/// - Una lista de mapas que contienen la información de los platos.
+///
+/// Lanza:
+/// - Una excepción si ocurre un error durante la obtención de los platos.
+Future<List<Map<String, dynamic>>> getFood({String? foodId}) async {
     final headers = _createHeaders();
+    String url;
+
+    if (foodId != null) {
+        url = '$baseUrl/rest/v1/food?select=*&id=eq.$foodId';
+    } else {
+        url = '$baseUrl/rest/v1/food?select=*';
+    }
 
     final response = await http.get(Uri.parse(url), headers: headers);
 
     if (response.statusCode == 200) {
-      final List<dynamic> jsonResponse = json.decode(response.body);
-      return jsonResponse.cast<Map<String, dynamic>>();
+        final List<dynamic> jsonResponse = json.decode(response.body);
+        return jsonResponse.cast<Map<String, dynamic>>();
     } else {
-      throw Exception('Error al cargar los platos');
+        throw Exception('Error al cargar los platos');
     }
-  }
+}
+
 
   Future<List<Map<String, dynamic>>> getFoodAddons() async {
     final url = '$baseUrl/rest/v1/food_addon?select=*';
@@ -325,9 +347,37 @@ class SupabaseApi {
     return jsonResponse.cast<Map<String, dynamic>>();
   }
 
+  // Carrito
+
   // REVISAR
-  Future<List<Map<String, dynamic>>> getCartItems2(String cartId) async {
-    final url = '$baseUrl/rest/v1/cart_item?select=*&cart_id=eq.$cartId';
+  /// Obtiene los items del carrito desde la API REST.
+  ///
+  /// Parámetros:
+  /// - [cartId]: El ID del carrito.
+  ///
+  /// Retorna:
+  /// - Una lista de mapas que contienen la información de los items del carrito.
+  ///
+  /// Lanza:
+  /// - Una excepción si ocurre un error durante la obtención de los items.
+  Future<List<Map<String, dynamic>>> fetchCartItems(String cartId) async {
+      final headers = _createHeaders();
+
+      final url = '$baseUrl/rest/v1/cart_item?select=*&cart_id=eq.$cartId';
+
+      final response = await http.get(Uri.parse(url), headers: headers);
+
+      if (response.statusCode == 200) {
+          final List<dynamic> jsonResponse = json.decode(response.body);
+          return jsonResponse.cast<Map<String, dynamic>>();
+      } else {
+          throw Exception('Error al cargar los items del carrito desde la API');
+      }
+  }
+
+
+  Future<List<Map<String, dynamic>>> getFoodFromCart(foodId) async {
+    final url = '$baseUrl/rest/v1/food?select=*&id=eq.$foodId';
     final headers = _createHeaders();
 
     final response = await http.get(Uri.parse(url), headers: headers);
@@ -336,7 +386,37 @@ class SupabaseApi {
       final List<dynamic> jsonResponse = json.decode(response.body);
       return jsonResponse.cast<Map<String, dynamic>>();
     } else {
-      throw Exception('Error al cargar food_addons');
+      throw Exception('Error al cargar los pedidos del carrito');
     }
+  }
+
+  Future<List<Addon>> getFoodAddonsFromCart(String cartItemId) async {
+    
+    // Extraer los pedidos del carrito
+    final response = await supabase.from('cart_item_addon').select('*').eq('cart_item_id', cartItemId);
+
+    // Extraer los addon_id de los pedidos del carrito
+    List<int> addonIds = 
+        response.map<int>((item) => item['addon_id'] as int).toList();
+    
+    if (addonIds.isEmpty) {
+      if (kDebugMode) {
+        print('No se encontraron complementos para este plato');
+      }
+      return [];
+    }
+
+    // 
+    final conditions = addonIds.map((id) => 'id.eq.$id').join(',');
+
+    // Obtener los addons usando los addon_id de los pedidos del carrito
+    final addonDetailsResponse = 
+        await supabase.from('addon').select('*').or(conditions);
+    
+    List<Addon> addonList = addonDetailsResponse
+        .map<Addon>((json) => Addon.fromJson(json))
+        .toList();
+    
+    return addonList;
   }
 }

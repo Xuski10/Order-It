@@ -48,7 +48,7 @@ class FoodController {
   Future<List<Map<String, dynamic>>> fetchCartFood(String cartId) async {
     try {
       final List<Map<String, dynamic>> cartFood =
-          await supabaseApi.getCartItems2(cartId);
+          await supabaseApi.fetchCartItems(cartId);
 
       return cartFood;
     } catch (error) {
