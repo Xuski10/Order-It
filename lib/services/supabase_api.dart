@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 import 'package:order_it_2/models/addon.dart';
+import 'package:order_it_2/models/cart_food.dart';
 import 'package:order_it_2/services/snackbar_helper.dart';
+import 'package:order_it_2/utils/random_id.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -34,6 +36,15 @@ class SupabaseApi {
       'Content-Type': 'application/json',
       'apikey': apikey,
       'Authorization': authorization
+    };
+  }
+
+  Map<String, String> _createHeadersInsert() {
+    return {
+      'Content-Type': 'application/json',
+      'apikey': apikey,
+      'Authorization': authorization,
+      "Prefer": "return=minimal"
     };
   }
 
@@ -418,5 +429,62 @@ Future<List<Map<String, dynamic>>> getFood({String? foodId}) async {
         .toList();
     
     return addonList;
+  }
+
+  Future<String> createCart(List<CartFood> cartFood, double total) async {
+    final urlCart = '$baseUrl/rest/v1/cart';
+    final urlCartItem = '$baseUrl/rest/v1/cart_item';
+    final urlCartItemAddon = '$baseUrl/rest/v1/cart_item_addon';
+    final headers = _createHeadersInsert();
+
+    // Convertir DateTime.now() a ISO 8601 string
+    final now = DateTime.now().toUtc().toIso8601String();
+    final cartId = RandomIds.generateRandomId().toString();
+    final supabase = Supabase.instance.client;
+    final UserResponse userResponse = await supabase.auth.getUser();
+  
+    print(total.roundToDouble());
+
+    try {
+      await http.post(
+        Uri.parse(urlCart),
+        headers: headers,
+        body: jsonEncode({
+          "id": cartId,
+          "user_id": userResponse.user!.id,
+          "price": double.parse(total.toStringAsFixed(2)),
+          "is_finished": true,
+          "created_at": now
+        })
+      );
+
+      for(var item in cartFood) {
+        await http.post(
+          Uri.parse(urlCartItem),
+          headers: headers,
+          body: jsonEncode({
+            "id": item.id,
+            "cart_id": cartId,
+            "food_id": item.food.id,
+            "quantity": item.quantity
+          })
+        );
+
+        if (item.addons.isNotEmpty) {
+          for(var addon in item.addons) {
+            await http.post(
+              Uri.parse(urlCartItemAddon),
+              headers: headers,
+              body: jsonEncode({"cart_item_id": item.id, "addon_id": addon.id}),
+            );
+          }
+        }
+      }
+
+      return cartId;
+
+    } catch (e) {
+      throw Exception('Error al crear el carrito $e');
+    }
   }
 }
