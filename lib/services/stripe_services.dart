@@ -65,7 +65,7 @@ class StripeService {
       total,
     );
 
-    final result = await redirectToCheckout(
+    /*final result = await redirectToCheckout(
       context: context,
       sessionId: sessionId,
       publishableKey: publishableKey,
@@ -82,6 +82,6 @@ class StripeService {
       );
 
       return text;
-    }
+    }*/
   }
 }

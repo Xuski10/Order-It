@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
+import 'package:order_it_2/models/usuario.dart';
 import 'package:order_it_2/models/addon.dart';
 import 'package:order_it_2/models/cart_food.dart';
 import 'package:order_it_2/services/snackbar_helper.dart';
@@ -146,6 +147,25 @@ class SupabaseApi {
         print('Error al obtener el UUID del usuario: ${response.statusCode}');
       }
       return null;
+    }
+  }
+
+  Future<bool> updateUser(updateUser) async {
+    try {
+      await supabase
+          .from("users")
+          .update({
+            'nombre': updateUser.nombre,
+            'apellido_1': updateUser.apellido_1,
+            'telefono': updateUser.telefono
+          })
+          .eq('email', updateUser.email)
+          .select();
+      
+      return true;
+
+    } catch (e) {
+      throw 'No se pudieron actualizar los datos';
     }
   }
 
