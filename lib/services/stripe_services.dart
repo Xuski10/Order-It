@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class StripeService {
-  final prueba = "asd";
   static String secretKey =
       "sk_test_51PRMsUDNItGpGPanSipjoAS5aaf0OyH3Yr0MgPNkqMP3CSmxFYyht6ypDU6N9bctRwgOdIxNykZlfu1uY56yRpwn00FK0Esa9f";
   static String publishableKey =

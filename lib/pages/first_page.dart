@@ -103,7 +103,7 @@ class FirstPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AssignTable(userId: "asd"),
+                        builder: (context) => AssignTable(userId: userId),
                       )
                     );
                   }

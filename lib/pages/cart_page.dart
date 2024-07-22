@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:order_it_2/components/my_cart_tile.dart';
+import 'package:order_it_2/components/my_pay_button.dart';
 import 'package:order_it_2/models/cart_food.dart';
 import 'package:order_it_2/models/restaurant.dart';
 import 'package:provider/provider.dart';
@@ -79,9 +80,28 @@ class CartPage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        
+                        MyPayButton(userCart: userCart),
+                        Column(
+                          children: [
+                            Text(
+                              restaurant.formatPrice(restaurant.getTotalPrice()),
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold
+                              ),
+                            ),
+                            const Text(
+                              'TOTAL IMP. INCL*',
+                              style: TextStyle(
+                                fontSize: 8,
+                                fontWeight: FontWeight.bold
+                              ),
+                            )
+                          ],
+                        )
                       ],
-                    )
+                    ),
+                    const SizedBox( height: 25 )
                   ],
                 ),
               )

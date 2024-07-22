@@ -3,6 +3,7 @@ import 'package:order_it_2/models/cart_food.dart';
 import 'package:order_it_2/models/restaurant.dart';
 import 'package:order_it_2/pages/delivery_progress_page.dart';
 import 'package:order_it_2/pages/home_page.dart';
+import 'package:order_it_2/services/stripe_services.dart';
 import 'package:order_it_2/services/supabase_api.dart';
 import 'package:provider/provider.dart';
 
